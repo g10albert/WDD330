@@ -23,5 +23,11 @@ document.querySelector("input[name=zip]").addEventListener("blur", () => {
 // Handle submit
 document.forms["checkout"].addEventListener("submit", (e) => {
   e.preventDefault();
-  myCheckout.checkout(e.target);
+  const myForm = e.target;
+  const chk_status = myForm.checkValidity();
+  myForm.reportValidity();
+
+  if (chk_status) {
+    myCheckout.checkout(myForm);
+  }
 });

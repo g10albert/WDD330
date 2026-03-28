@@ -91,11 +91,18 @@ export default class CheckoutProcess {
 
     try {
       const res = await services.checkout(json);
-      console.log(res);
-      setLocalStorage(this.key, []); // Clear cart on success
+      setLocalStorage(this.key, []); // Clear cart
       location.assign("/checkout/success.html");
     } catch (err) {
-      console.log(err);
+      // Clear existing alerts so they don't stack
+      const existingAlerts = document.querySelectorAll(".alert");
+      existingAlerts.forEach((alert) => alert.remove());
+
+      // Loop through the error object from the server
+      for (let message in err.message) {
+        import("./utils.mjs").then((m) => m.alertMessage(err.message[message]));
+      }
+      console.table(err.message);
     }
   }
 }
